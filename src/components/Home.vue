@@ -6,8 +6,13 @@
                 <v-btn large to="/meetup/new" class="primary mr-2">Create New Meetup</v-btn>
             </v-flex>
         </v-layout>
-        <v-layout row wrap class="mt-2">
-            <v-flex xs12>
+        <v-layout row>
+            <v-flex xs12 class="text-xs-center">
+                <v-progress-circular :size="70" :width="7" v-if="loading" color="primary" indeterminate></v-progress-circular>
+            </v-flex>
+        </v-layout>
+        <v-layout row wrap class="mt-2" v-if="!loading">
+            <v-flex xs6>
                 <v-carousel style="cursor: pointer;">
                     <v-carousel-item
                         v-for="meetup in meetups"
@@ -32,8 +37,11 @@
 <script>
 export default {
     computed: {
-        meetups () {
+        meetups() {
             return this.$store.getters.featuredMeetups;
+        },
+        loading() {
+            return this.$store.getters.loading;
         }
     },
     methods: {

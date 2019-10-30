@@ -5,7 +5,7 @@
                 <v-card class="mx-auto" max-width="300">
                     <v-card class="mx-auto">
                         <div class="grey lighten-2 text-center" style="min-height:180px">
-                            <v-img :src="image"></v-img>
+                            <v-img :src="imageUrl"></v-img>
                         </div>
                         <v-card-title>{{ title }}</v-card-title>
                         <v-card-subtitle class="pb-0">{{ location }}</v-card-subtitle>
@@ -85,14 +85,25 @@
                             </v-menu>
                         </v-col>
                     </v-row>
-
-                    <v-text-field
+                    <v-row>
+                        <v-col>
+                            <input
+                                type="file"
+                                style="display:none"
+                                ref="fileInput"
+                                accept="image/*"
+                                @change="onFilePicked"
+                            />
+                            <v-btn raised class="primary" @click="onPickFile">Upload Image</v-btn>
+                        </v-col>
+                    </v-row>
+                    <!-- <v-text-field
                         v-model="image"
                         label="Image Url"
                         prepend-icon="mdi-image-outline"
                         :rules="imageRules"
                         required
-                    ></v-text-field>
+                    ></v-text-field> -->
                     <v-textarea
                         v-model="description"
                         label="Description"
@@ -142,8 +153,8 @@ export default {
         timeRules: [v => !!v || "Time is required"],
         menu2: false,
         modal2: false,
-        image: "",
-        imageRules: [v => !!v || "Image is required"],
+        image: null,
+        imageUrl: "",
         description: "",
         descriptionRules: [v => !!v || "Description is required"]
     }),
@@ -154,17 +165,36 @@ export default {
         },
         onCreateMeetup() {
             if (this.$refs.form.validate()) {
+                if(!this.image) {
+                    alert ('select an image');
+                }
                 const meetupData = {
                     title: this.title,
                     location: this.location,
-                    imageUrl: this.image,
+                    image: this.image,
                     description: this.description,
-                    date: this.date + " " + this.time,
+                    date: this.date + " " + this.time
                 };
                 this.$store.dispatch("createMeetup", meetupData);
                 this.$router.push("/meetups");
             }
-        }
+        },
+        onPickFile() {
+            this.$refs.fileInput.click();
+        },
+        onFilePicked(event) {
+            const files = event.target.files;
+            let filename = files[0].name;
+            if(filename.lastIndexOf('.')<= 0) {
+                return alert ('Please add a valid file!');
+            }
+            const fileReader = new FileReader();
+            fileReader.addEventListener('load', () => {
+                this.imageUrl = fileReader.result;
+            })
+            fileReader.readAsDataURL(files[0]);
+            this.image = files[0];
+        },
     }
 };
 </script>
