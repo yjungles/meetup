@@ -34,32 +34,8 @@
                         :rules="locationRules"
                         required
                     ></v-text-field>
-                    <v-row justify="center">
-                        <v-col>
-                            <v-dialog
-                                ref="dialog"
-                                v-model="modal2"
-                                :return-value.sync="time"
-                                persistent
-                                width="290px"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-text-field
-                                        v-model="time"
-                                        label="Picker in dialog"
-                                        prepend-icon="mdi-clock-outline"
-                                        readonly
-                                        v-on="on"
-                                    ></v-text-field>
-                                </template>
-                                <v-time-picker v-if="modal2" v-model="time" full-width>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
-                                    <v-btn text color="primary" @click="$refs.dialog.save(time)">OK</v-btn>
-                                </v-time-picker>
-                            </v-dialog>
-                        </v-col>
-                        <v-col>
+
+
                             <v-menu
                                 ref="menu"
                                 v-model="menu"
@@ -83,8 +59,8 @@
                                     <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                                 </v-date-picker>
                             </v-menu>
-                        </v-col>
-                    </v-row>
+                        
+
                     <v-row>
                         <v-col>
                             <input
@@ -147,12 +123,9 @@ export default {
         date: new Date().toISOString().substr(0, 10),
         menu: false,
         modal: false,
-
         dateRules: [v => !!v || "Date is required"],
-        time: "",
-        timeRules: [v => !!v || "Time is required"],
-        menu2: false,
-        modal2: false,
+
+
         image: null,
         imageUrl: "",
         description: "",
@@ -173,7 +146,7 @@ export default {
                     location: this.location,
                     image: this.image,
                     description: this.description,
-                    date: this.date + " " + this.time
+                    date: this.date,
                 };
                 this.$store.dispatch("createMeetup", meetupData);
                 this.$router.push("/meetups");

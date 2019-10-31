@@ -64,7 +64,7 @@ const actions = {
             .then(URL => {
                 imageURL = URL
                 return firebase.database().ref('meetups').child(key).update({ imageUrl: imageURL })
-              })
+            })
             .then(() => {
                 commit('createMeetup', {
                     ...meetup,
@@ -118,6 +118,24 @@ const actions = {
                 }
             )
     },
+    updateMeetupData({ commit }, payload) {
+        commit('setLoading', true);
+        const updateObj = {}
+        if (payload.title) {
+            updateObj.title = payload.title;
+        }
+        if (payload.description) {
+            updateObj.description = payload.description;
+        }
+        firebase.database().ref('meetups').child(payload.id).update(updateObj)
+            .then(() => {
+                commit('updateMeetup', payload);
+                commit('setLoading', false);
+            }).catch((error)=>{
+                commit('setError', error);
+                commit('setLoading', false);
+            })
+    },
     autoSignIn({ commit }, payload) {
         commit('setUser', { id: payload.uid, registeredMeetups: [] });
     },
@@ -127,7 +145,8 @@ const actions = {
     logout({ commit }) {
         firebase.auth().signOut();
         commit('setUser', null);
-    }
+    },
+
 };
 
 const mutations = {
@@ -136,6 +155,20 @@ const mutations = {
     },
     createMeetup(state, payload) {
         state.loadedMeetups.push(payload);
+    },
+    updateMeetup(state, payload) {
+        const meetup = state.loadedMeetups.find(meetup => {
+            return meetup.id === payload.id
+        })
+        if (payload.title) {
+            meetup.title = payload.title
+        }
+        if (payload.description) {
+            meetup.description = payload.description
+        }
+        if (payload.date) {
+            meetup.date = payload.date
+        }
     },
     setUser(state, payload) {
         state.user = payload;
@@ -176,7 +209,8 @@ const getters = {
     },
     error(state) {
         return state.error;
-    }
+    },
+
 };
 export default {
 

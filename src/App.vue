@@ -18,7 +18,7 @@
                     <v-list-item-icon>
                         <v-icon>mdi-logout</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title  >Logout</v-list-item-title>
+                    <v-list-item-title>Logout</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
@@ -104,6 +104,10 @@ export default {
             this.$store.dispatch('logout');
             this.$router.push('/');
         }
+    },
+    created() {
+        this.$store.dispatch("loadMeetups");
     }
+    
 };
 </script>

@@ -1,7 +1,8 @@
 import store from "../store";
 
 export default (to, from, next) => {
-    if (store.getters.user) {
+    var user = store.getters.user;
+    if (user) {
         next();
     } else {
         next('/signin');

@@ -5,18 +5,23 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import DateFilter from "./filters/date";
 import AlertCmp from "./components/Shared/Alert.vue";
+import EditMeetupDialog from "./components/Meetup/Edit/EditMeetupDetailsDialog.vue";
+import RegisterDialog from "./components/Meetup/Registration/RegisterDialog.vue";
 import *  as firebase from 'firebase';
 
 
 Vue.config.productionTip = false;
 Vue.filter('date', DateFilter);
 Vue.component('app-alert', AlertCmp);
+Vue.component('app-edit-meetup-details-dialog', EditMeetupDialog);
+Vue.component('app-meetup-register-dialog', RegisterDialog);
 
 new Vue({
   router,
   store,
   vuetify,
   render: h => h(App),
+
   created() {
     // Initialize Firebase
     var firebaseConfig = {
@@ -31,11 +36,12 @@ new Vue({
       measurementId: "G-MGV1EKNLN5"
     };
     firebase.initializeApp(firebaseConfig);
-    firebase.auth().onAuthStateChanged((user)=>{
-      if (user){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
         this.$store.dispatch('autoSignIn', user)
       }
     })
+
   },
 
 

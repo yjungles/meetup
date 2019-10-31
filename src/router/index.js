@@ -47,8 +47,9 @@ const routes = [
     component: Signup
   },
   {
-    path: "/signin",
+    path: "/signin/:routeName?",
     name: "Signin",
+    props: true,
     component: Signin
   },
   {
